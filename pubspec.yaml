@@ -1,0 +1,34 @@
+name: all_country_picker
+description: A new Flutter plugin project.
+version: 0.0.1
+homepage: null
+
+environment:
+  sdk: '>=2.18.0-271.7.beta <3.0.0'
+  flutter: ">=2.5.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg: ^1.1.4
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+  plugin:
+    platforms:
+      android:
+        package: com.example.all_country_picker
+        pluginClass: AllCountryPickerPlugin
+      ios:
+        pluginClass: AllCountryPickerPlugin
+
+  assets:
+    - lib/assets/images/
+  #   - images/a_dot_ham.jpeg
+  
