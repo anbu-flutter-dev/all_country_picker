@@ -1,5 +1,5 @@
 name: all_country_picker
-description: A new Flutter plugin project.
+description: A country picker plugin with textfield, and it will format as you type.
 version: 0.0.1
 homepage: null
 
@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^1.1.4
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:

@@ -33,7 +33,10 @@ class _MyAppState extends State<MyApp> {
             padding: const EdgeInsets.all(15),
             child: CountryField(
               phoneNumberController: phoneNumberController,
-              countryList: const ['us', 'in'],
+              // countryList: const ['us', 'ae'],
+              onDropdownChanged: (value) {
+                // print(value!.isoCode);
+              },
             ),
           ),
         ),

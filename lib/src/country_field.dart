@@ -35,6 +35,7 @@ class CountryField extends StatefulWidget {
   final double? flagHeight;
   final double? flagWidth;
   final TextStyle? countryCodeTextStyle;
+
   ///Only supports iso code
   final List<String>? countryList;
 
@@ -49,7 +50,11 @@ class _CountryFieldState extends State<CountryField> {
 
   @override
   void initState() {
-    countryItem = getCountryItems(widget.countryList!);
+    if (widget.countryList != null && widget.countryList!.isNotEmpty) {
+      countryItem = getCountryItems(widget.countryList!);
+    } else {
+      countryItem = getCountryItems([]);
+    }
     super.initState();
   }
 
@@ -57,7 +62,7 @@ class _CountryFieldState extends State<CountryField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.phoneNumberController,
-      keyboardType: TextInputType.phone,
+      keyboardType: widget.keyboardType ?? TextInputType.phone,
       inputFormatters: [
         TextInputMask(
           mask: countryModel?.hint.replaceAll(RegExp(r'[0-9]'), '9'),
@@ -66,13 +71,17 @@ class _CountryFieldState extends State<CountryField> {
       ],
       style: widget.style,
       decoration: InputDecoration(
-        hintText: widget.hintText,
-        hintStyle: widget.hintStyle,
+        hintText: widget.hintText ?? countryModel?.hint,
+        hintStyle: widget.hintStyle ??
+            TextStyle(
+              color: Colors.grey.withOpacity(0.5),
+            ),
         errorStyle: widget.errorStyle,
         isCollapsed: widget.isCollapsed ?? false,
         isDense: widget.isDense,
-        prefixIcon: SizedBox(
-          height: 50,
+        prefixIcon: Container(
+          height: 40,
+          margin: const EdgeInsets.only(right: 8),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<CountryModel>(
               iconSize: 18,
@@ -82,6 +91,13 @@ class _CountryFieldState extends State<CountryField> {
                 setState(() {
                   countryModel = value!;
                 });
+                debugPrint("Country Name : ${value!.name.toString()}");
+                debugPrint("Country Code : ${value.countryCode.toString()}");
+                debugPrint("ISO Code : ${value.isoCode.toString()}");
+                debugPrint("Placeholder : ${value.hint.toString()}");
+                if (widget.onDropdownChanged != null) {
+                  widget.onDropdownChanged!(value);
+                }
               },
             ),
           ),
@@ -103,6 +119,10 @@ class _CountryFieldState extends State<CountryField> {
       }
       filterList = filterList.toSet().toList();
 
+      setState(() {
+        countryModel = filterList[0];
+      });
+
       for (CountryModel model in filterList) {
         items.add(
           DropdownMenuItem(
@@ -112,8 +132,8 @@ class _CountryFieldState extends State<CountryField> {
               children: [
                 Image.asset(
                   model.flag,
-                  height: 20,
-                  width: 30,
+                  height: widget.flagHeight ?? 20,
+                  width: widget.flagWidth ?? 30,
                   fit: BoxFit.fill,
                   filterQuality: FilterQuality.medium,
                   package: 'all_country_picker',
@@ -121,9 +141,10 @@ class _CountryFieldState extends State<CountryField> {
                 const SizedBox(width: 5),
                 Text(
                   "+${model.countryCode}",
-                  style: const TextStyle(
-                    fontSize: 13,
-                  ),
+                  style: widget.countryCodeTextStyle ??
+                      const TextStyle(
+                        fontSize: 13,
+                      ),
                 ),
               ],
             ),
@@ -133,6 +154,9 @@ class _CountryFieldState extends State<CountryField> {
     } else {
       filterList = countryList.countryList;
       filterList = filterList.toSet().toList();
+      setState(() {
+        countryModel = filterList[0];
+      });
       for (CountryModel model in filterList) {
         items.add(
           DropdownMenuItem(
